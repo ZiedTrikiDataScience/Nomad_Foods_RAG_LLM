@@ -1,0 +1,40 @@
+version: '3.9'
+
+name: fintech_rag_streamlit_app
+
+services:
+
+  # Elasticsearch service
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.13
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false  # Disable security to avoid username/password
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+
+
+
+  # Streamlit app service
+  streamlit:
+    build:
+      context: .
+    ports:
+      - "8501:8501"
+    environment:
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}  # Set your Mistral API key here
+      - ELASTICSEARCH_HOST=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch  # Ensure Elasticsearch starts before the Streamlit app
+
+volumes:
+  esdata:
+    driver: local

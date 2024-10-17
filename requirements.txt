@@ -1,0 +1,4 @@
+elasticsearch
+streamlit
+mistralai
+sentence_transformers
