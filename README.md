@@ -24,6 +24,29 @@ Customizable Chatbot Interaction: The chatbot can tailor its responses based on 
 Improved Customer Service Efficiency: By handling repetitive and common queries, the system allows customer service agents to focus on higher-value tasks.
 
 
+## Pipeline Description :
+
+### Prerequisites :
+
+* Install Python 3.11.9
+
+* Create a Virtual environment and activate it
+
+* Install the requirements.txt :
+```bash
+pip install -r requirements.txt
+```
+
+### 1. Cloning the git repo to have all the files :
+```bash
+git clone https://github.com/ZiedTrikiDataScience/Credit-Card-Approval-MLOps-Project.git
+```
+
+
+
+
+
+
 ## Deployment Instructions
 
 1. **Obtain API Keys:**
