@@ -39,7 +39,7 @@ pip install -r requirements.txt
 
 ### 1. Cloning the git repo to have all the files :
 ```bash
-git clone https://github.com/ZiedTrikiDataScience/Credit-Card-Approval-MLOps-Project.git
+git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 ```
 
 
