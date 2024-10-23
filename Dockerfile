@@ -1,5 +1,5 @@
 # Use the official Python image as a base
-FROM python:3.12.4-slim
+FROM python:3.11.9-slim
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
@@ -20,4 +20,4 @@ COPY . /app/
 EXPOSE 8501
 
 # Set the entrypoint to run the Streamlit app
-CMD ["streamlit", "run", "streamlit_chatbot_rag_fintex.py"]
+CMD ["streamlit", "run", "streamlit_chatbot_rag_nomad_foods.py"]

@@ -1,12 +1,12 @@
 import streamlit as st
-from rag_financial_chatbot import search_similar_question, generate_enhanced_answer
+from rag_nomad_foods_chatbot import search_similar_question, generate_enhanced_answer
 import os
 from PIL import Image
 import time
 
 # Function to handle the chatbot logic
 def chatbot(prompt):
-    api_key = os.environ.get("MISTRAL_API_KEY")
+    api_key = os.environ.get("TOGETHER_API_KEY")
     with st.spinner("🔍 Searching for relevant information..."):
         faq = search_similar_question(prompt)
         time.sleep(0.5)  # Add a small delay for UX
@@ -17,10 +17,10 @@ def chatbot(prompt):
 
 def load_assets():
     try:
-        logo = Image.open('fintech.jpg')
+        logo = Image.open('nomad_foods_logo.jpg')  # Use Nomad Foods logo
         return logo
     except FileNotFoundError:
-        st.warning("Logo file not found. Please ensure 'fintech.jpg' exists in the correct path.")
+        st.warning("Logo file not found. Please ensure 'nomad_foods_logo.jpg' exists in the correct path.")
         return None
 
 def initialize_session_state():
@@ -34,8 +34,8 @@ def initialize_session_state():
 def app():
     # Page configuration
     st.set_page_config(
-        page_title="FinTechX AI Assistant",
-        page_icon="🤖",
+        page_title="Nomad Foods AI Assistant",
+        page_icon="🍽️",
         layout="wide"
     )
 
@@ -84,32 +84,30 @@ def app():
         st.sidebar.markdown("---")
         st.sidebar.header("ℹ️ About")
         st.sidebar.info("""
-        This AI assistant uses state-of-the-art 
-        Retrieval-Augmented Generation (RAG) 
-        powered by Mistral AI to provide accurate 
-        answers to your FinTechX questions.
+        This AI assistant uses Retrieval-Augmented Generation (RAG) powered by TOGETHER AI
+        to answer your queries related to Nomad Foods, covering various products and services.
         """)
 
     with col2:
         # Main content
         logo = load_assets()
         if logo:
-            st.image(logo, width=150)
+            st.image(logo, width=350)
         
-        st.title("FinTechX AI Assistant 🤖")
+        st.title("Nomad Foods AI Assistant 🍽️")
         st.markdown("""
             <div style='background-color: #f0f7fb; padding: 1rem; border-radius: 10px; margin-bottom: 1rem;'>
-                Welcome! I'm here to help you with any questions about FinTechX services. 
-                From account management to technical support, I've got you covered.
+                Welcome! I'm here to assist you with any questions about Nomad Foods' products 
+                and services. Feel free to ask about anything from product information to delivery options.
             </div>
         """, unsafe_allow_html=True)
 
         # Sample questions for quick queries
         col1, col2, col3 = st.columns([1, 1, 1])
         sample_questions = [
-            "Does FinTechX offer customer support?",
-            "How long does it take to withdraw funds from FinTechX?",
-            "What are the fees for investing with FinTechX?"
+            "What are the ingredients in Nomad Foods' products?",
+            "Does Nomad Foods offer vegan options?",
+            "How can I track my Nomad Foods order?"
         ]
         
         # Check if a sample question button is clicked
