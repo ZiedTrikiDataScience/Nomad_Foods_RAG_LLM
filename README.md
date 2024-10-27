@@ -107,6 +107,10 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 
 ### 8. **RAG Evaluation:**
 
+### 8.0 **Generate the Ground truth Dataset:**
+
+- Run the ***generate_ground_truth_dataset.ipynb*** to generate the ground truth dataset that we will use for the Retrieval and Generation Evaluation.
+
 #### 8.1 : **Retrieval Evaluation :**
 
 - Run the ***evaluate_retrieval_faiss_rank_bm25.ipynb*** to test retrieval performance and quality.
