@@ -15,6 +15,7 @@ def chatbot(prompt):
         time.sleep(0.5)  # Add a small delay for UX
     return enhanced_answer
 
+
 def load_assets():
     try:
         logo = Image.open('nomad_foods_logo.jpg')  # Use Nomad Foods logo
