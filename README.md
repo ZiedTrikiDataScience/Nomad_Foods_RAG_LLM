@@ -105,7 +105,9 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 - Check the ***new_faq_data.json*** file that includes new faq data to be ingested and integrated to the dataset.
 - Run the script ***prefect_new_faq_ingestion_pipeline.py*** that reads that new data and concatenates it to the original dataset to update it with the new faqs. 
 
-### 8. **Retrieval Evaluation:**
+### 8. **RAG Evaluation:**
+
+#### 8.1 : **Retrieval Evaluation :**
 
 - Run the ***evaluate_retrieval_faiss_rank_bm25.ipynb*** to test retrieval performance and quality.
  
@@ -113,5 +115,9 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 
 - The metrics' results are almost similar but I chose ***FAISS*** because in a production environment, and thinking about future scalability of the project, ***FAISS*** excels by being faster in terms of retrieval speed especially for large datasets and high-dimensional data.
 
+#### 8.2 : **Generation Evaluation :**
 
-### 9. **RAG Evaluation:**
+- Run the ***evaluate_generator_rag.ipynb*** to test generation performance and quality.
+
+- This notebook allows you to assess the generator quality through Cosine Similarity and LLM-As-A-judge offline evaluation techniques.
+
