@@ -24,5 +24,6 @@ COPY . /app/
 # Expose the port that Streamlit runs on
 EXPOSE 8501
 
+
 # Set the entrypoint to run the Streamlit app
 CMD ["streamlit", "run", "streamlit_chatbot_rag_nomad_foods.py"]
