@@ -67,21 +67,21 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 - Ensure Kubernetes is set up and running on your local machine or a cloud provider.
 - Apply the deployment and service YAML files to start the application on Kubernetes:
 
-** Navigate to the Cloned Repository Directory:
+###### Navigate to the Cloned Repository Directory:
 ```bash
    cd Nomad_Foods_RAG_LLM
 ```
 
-**Apply the Kubernetes Deployment kubectl yaml file :
+###### Apply the Kubernetes Deployment kubectl yaml file :
 ```bash
    kubectl apply -f rag_nomad_app_deployment.yaml
  ```
 
-**Apply the Kubernetes Service kubectl yaml file :
+###### Apply the Kubernetes Service kubectl yaml file :
 ```bash
    kubectl apply -f rag_nomad_app_service.yaml ```
 
-**Verify the Deployment Status:
+###### Verify the Deployment Status:
 - To check the status of your pods and ensure they’re running correctly:
 
 ```bash
@@ -91,15 +91,15 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 
 - Confirm that the rag-nomad-streamlit-chatbot pod is running and the service is accessible.
 
-5. Accessing the Application:
-
+5. **Accessing the Application:**
+ - Open the app in your browser at :
 ```bash 
-Open the app in your browser at http://localhost:30001/
+ http://localhost:30001/
 ```
 
-6. Testing the Application:
+6. **Testing the Application:**
  - Interact with the RAG Chatbot with Entering queries based on FAQs related to Nomad Foods and test the enhanced response given by the app
 
-Evaluation Script:
+7. **Evaluation Script:**
 
 Use evaluate_retrieval.ipynb to test retrieval performance and quality. This notebook allows you to assess the accuracy of retrieved information compared to ground truth data.
