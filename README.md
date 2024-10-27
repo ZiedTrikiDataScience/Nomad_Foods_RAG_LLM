@@ -37,14 +37,14 @@ Improved Customer Service Efficiency: By handling repetitive and common queries,
 pip install -r requirements.txt
 ```
 
-### 1. Cloning the git repo to have all the files :
+
+## Deployment Instructions
+
+### 0. Cloning the git repo to have all the files :
 
 ```bash
 git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 ```
-
-
-## Deployment Instructions
 
 1. **Obtain API Keys:**
    - Sign up for an account with MistralAI and obtain your API key.
