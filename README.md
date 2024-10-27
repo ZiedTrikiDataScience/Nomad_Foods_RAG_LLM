@@ -105,5 +105,6 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 
 - Run the evaluate_retrieval_faiss_rank_bm25.ipynbb to test retrieval performance and quality.
  
----> This notebook allows you to assess the ***Hit-Rate*** and ***MMR*** of retrieved information compared to ground truth data using both ***FAISS*** and ***Rank_BM25***.
----> The metrics' results are almost similar but I chose ***FAISS*** because in a production environment, and thinking about future scalability of the project, ***FAISS*** excels by being faster in terms of retrieval speed especially for large datasets and high-dimensional data.
+- This notebook allows you to assess the ***Hit-Rate*** and ***MMR*** of retrieved information compared to ground truth data using both ***FAISS*** and ***Rank_BM25***.
+
+- The metrics' results are almost similar but I chose ***FAISS*** because in a production environment, and thinking about future scalability of the project, ***FAISS*** excels by being faster in terms of retrieval speed especially for large datasets and high-dimensional data.
