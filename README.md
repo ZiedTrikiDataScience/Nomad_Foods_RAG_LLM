@@ -103,7 +103,7 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 
 ### 7. **Retrieval Evaluation:**
 
-- Run the evaluate_retrieval_faiss_rank_bm25.ipynbb to test retrieval performance and quality.
+- Run the ***evaluate_retrieval_faiss_rank_bm25.ipynb*** to test retrieval performance and quality.
  
 - This notebook allows you to assess the ***Hit-Rate*** and ***MMR*** of retrieved information compared to ground truth data using both ***FAISS*** and ***Rank_BM25***.
 
