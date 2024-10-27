@@ -46,8 +46,7 @@ pip install -r requirements.txt
 git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 ```
 
--  Navigate to the Cloned Repository Directory:
--  
+-  Navigate to the Cloned Repository Directory: 
 ```bash
    cd Nomad_Foods_RAG_LLM
 ```
