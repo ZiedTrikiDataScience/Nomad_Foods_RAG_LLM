@@ -119,5 +119,5 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 
 - Run the ***evaluate_generator_rag.ipynb*** to test generation performance and quality.
 
-- This notebook allows you to assess the generator quality through Cosine Similarity and LLM-As-A-judge offline evaluation techniques.
+- This notebook allows you to assess the generator quality through ***Cosine Similarity*** and ***LLM-As-A-judge*** offline evaluation techniques.
 
