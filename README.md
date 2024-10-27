@@ -67,21 +67,22 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 - Ensure Kubernetes is set up and running on your local machine or a cloud provider.
 - Apply the deployment and service YAML files to start the application on Kubernetes:
 
-###### Navigate to the Cloned Repository Directory:
+###### 4.1: Navigate to the Cloned Repository Directory:
 ```bash
    cd Nomad_Foods_RAG_LLM
 ```
 
-###### Apply the Kubernetes Deployment kubectl yaml file :
+######  4.2: Apply the Kubernetes Deployment kubectl yaml file :
 ```bash
    kubectl apply -f rag_nomad_app_deployment.yaml
  ```
 
-###### Apply the Kubernetes Service kubectl yaml file :
+######  4.3: Apply the Kubernetes Service kubectl yaml file :
 ```bash
-   kubectl apply -f rag_nomad_app_service.yaml ```
+   kubectl apply -f rag_nomad_app_service.yaml
+```
 
-###### Verify the Deployment Status:
+###### 4.4: Verify the Deployment Status:
 - To check the status of your pods and ensure they’re running correctly:
 
 ```bash
