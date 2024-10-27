@@ -46,6 +46,10 @@ pip install -r requirements.txt
 git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 ```
 
+-  Navigate to the Cloned Repository Directory: 
+```bash
+   cd Nomad_Foods_RAG_LLM
+```
 ### 1. **Obtain API Keys:**
    - Sign up for an account with MistralAI and obtain your API key.
 
@@ -67,22 +71,18 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 - Ensure Kubernetes is set up and running on your local machine or a cloud provider.
 - Apply the deployment and service YAML files to start the application on Kubernetes:
 
-#### 4.1: Navigate to the Cloned Repository Directory:
-```bash
-   cd Nomad_Foods_RAG_LLM
-```
 
-#####  4.2: Apply the Kubernetes Deployment kubectl yaml file :
+#####  4.1: Apply the Kubernetes Deployment kubectl yaml file :
 ```bash
    kubectl apply -f rag_nomad_app_deployment.yaml
  ```
 
-#####  4.3: Apply the Kubernetes Service kubectl yaml file :
+#####  4.2: Apply the Kubernetes Service kubectl yaml file :
 ```bash
    kubectl apply -f rag_nomad_app_service.yaml
 ```
 
-##### 4.4: Verify the Deployment Status:
+##### 4.3: Verify the Deployment Status:
 - To check the status of your pods and ensure they’re running correctly:
 
 ```bash
@@ -101,6 +101,31 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 ### 6. **Testing the Application:**
  - Interact with the RAG Chatbot with Entering queries based on FAQs related to Nomad Foods and test the enhanced response given by the app
 
-### 7. **Evaluation Script:**
+### 7. **Ingestion Pipeline:**
+- Check the ***new_faq_data.json*** file that includes new faq data to be ingested and integrated to the dataset.
+- Run the script ***prefect_new_faq_ingestion_pipeline.py*** that reads that new data and concatenates it to the original dataset to update it with the new faqs. 
 
-Use evaluate_retrieval.ipynb to test retrieval performance and quality. This notebook allows you to assess the accuracy of retrieved information compared to ground truth data.
+### 8. **RAG Evaluation:**
+
+### 8.0 **Generate the Ground truth Dataset:**
+
+- Run the ***generate_ground_truth_dataset.ipynb*** to generate the ground truth dataset that we will use for the Retrieval and Generation Evaluation.
+
+#### 8.1 : **Retrieval Evaluation :**
+
+- Run the ***evaluate_retrieval_faiss_rank_bm25.ipynb*** to test retrieval performance and quality.
+ 
+- This notebook allows you to assess the ***Hit-Rate*** and ***MMR*** of retrieved information compared to ground truth data using both ***FAISS*** and ***Rank_BM25***.
+
+- The metrics' results are almost similar but I chose ***FAISS*** because in a production environment, and thinking about future scalability of the project, ***FAISS*** excels by being faster in terms of retrieval speed especially for large datasets and high-dimensional data.
+
+#### 8.2 : **Generation Evaluation :**
+
+- Run the ***evaluate_generator_rag.ipynb*** to test generation performance and quality.
+
+- This notebook allows you to assess the generator quality through ***Cosine Similarity*** and ***LLM-As-A-Judge*** offline evaluation techniques.
+
+- ***The Cosine Similarity*** is computed between the ***LLM_Answer*** and the ***Ground_Truth_Answer***.
+
+- The ***LLM-As-A-judge*** is applied through calling ***ministral-3b-latest*** which is a different mistral model than the one used in the original app : ***mistral-large-latest*** so that we ensure an unbiased generation evaluation.
+
