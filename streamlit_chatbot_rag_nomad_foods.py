@@ -4,9 +4,9 @@ import os
 from PIL import Image
 import time
 
-# Function to handle the chatbot logic
+#  Function to handle the chatbot logic
 def chatbot(prompt):
-    api_key = os.environ.get("TOGETHER_API_KEY")
+    api_key = os.environ.get("MISTRAL_API_KEY")
     with st.spinner("🔍 Searching for relevant information..."):
         faq = search_similar_question(prompt)
         time.sleep(0.5)  # Add a small delay for UX
@@ -84,7 +84,7 @@ def app():
         st.sidebar.markdown("---")
         st.sidebar.header("ℹ️ About")
         st.sidebar.info("""
-        This AI assistant uses Retrieval-Augmented Generation (RAG) powered by TOGETHER AI
+        This AI assistant uses Retrieval-Augmented Generation (RAG) powered by MISTRAL AI
         to answer your queries related to Nomad Foods, covering various products and services.
         """)
 
@@ -117,7 +117,7 @@ def app():
                     st.session_state.user_query = sample_questions[i]
 
         # Update text input value based on the selected sample question
-        user_query = st.text_input("", placeholder="Type your question here...", value=st.session_state.user_query, key="user_input")
+        user_query = st.text_input("", placeholder="Type your question here please...", value=st.session_state.user_query, key="user_input")
 
         if user_query:
             response = chatbot(user_query)

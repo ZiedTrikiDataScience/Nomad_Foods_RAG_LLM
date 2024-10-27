@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: streamlit-chatbot
+  name: rag-nomad-streamlit-chatbot
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: streamlit-chatbot
+      app: rag-nomad-streamlit-chatbot
   template:
     metadata:
       labels:
-        app: streamlit-chatbot
+        app: rag-nomad-streamlit-chatbot
     spec:
       containers:
-      - name: streamlit-chatbot
+      - name: rag-nomad-streamlit-chatbot
         image: ziedtrikimlops/rag-chatbot-nomad-food:v1
         ports:
         - containerPort: 8501
         env:
-        - name: TOGETHER_API_KEY
+        - name: MISTRAL_API_KEY
           valueFrom:
             secretKeyRef:
-              name: together-api-key
-              key: TOGETHER_API_KEY
+              name: mistral-api-key
+              key: MISTRAL_API_KEY
