@@ -55,7 +55,7 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
    ```bash
    kubectl create secret generic mistral-api-key --from-literal=MISTRAL_API_KEY=<your-api-key> ```
 
-3. Set Up Docker Image:
+3. **Set Up Docker Image**:
  - Pull the Docker image from Docker Hub:
 
 ```bash
