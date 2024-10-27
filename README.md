@@ -53,61 +53,46 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
    - Run the following command to create a Kubernetes secret with your API key:
    
    ```bash
-   kubectl create secret generic mistral-api-key --from-literal=MISTRAL_API_KEY=<your-api-key>
+   kubectl create secret generic mistral-api-key --from-literal=MISTRAL_API_KEY=<your-api-key> ```
 
 3. Set Up Docker Image:
-Pull the Docker image from Docker Hub:
+ - Pull the Docker image from Docker Hub:
 
-bash
-Copy code
-docker pull ziedtrikimlops/rag-chatbot-nomad-food:v1
+```bash
+   docker pull ziedtrikimlops/rag-chatbot-nomad-food:v1 ```
+
 4. Deploy the Application on Kubernetes:
-Ensure Kubernetes is set up and running on your local machine or a cloud provider.
-Apply the deployment and service YAML files to start the application on Kubernetes.
-Steps to Apply Kubernetes Files:
-Navigate to the Cloned Repository Directory:
+- Ensure Kubernetes is set up and running on your local machine or a cloud provider.
+- Apply the deployment and service YAML files to start the application on Kubernetes:
 
-bash
-Copy code
-cd Nomad_Foods_RAG_LLM
-Apply the Kubernetes Deployment:
+** Navigate to the Cloned Repository Directory:
+```bash
+   cd Nomad_Foods_RAG_LLM ```
 
-Deploy the app using the deployment YAML file:
+**Apply the Kubernetes Deployment kubectl yaml file :
+```bash
+   kubectl apply -f rag_nomad_app_deployment.yaml ```
 
-bash
-Copy code
-kubectl apply -f rag_nomad_app_deployment.yaml
-Apply the Kubernetes Service:
+**Apply the Kubernetes Service kubectl yaml file :
+```bash
+   kubectl apply -f rag_nomad_app_service.yaml ```
 
-This will expose the application on a NodePort or LoadBalancer depending on the configuration.
+**Verify the Deployment Status:
+- To check the status of your pods and ensure they’re running correctly:
 
-bash
-Copy code
-kubectl apply -f rag_nomad_app_service.yaml
-Verify Deployment Status:
+```bash
+   kubectl get pods
+   kubectl get services ```
 
-To check the status of your pods and ensure they’re running correctly:
-
-bash
-Copy code
-kubectl get pods
-kubectl get services
-Confirm that the rag-nomad-streamlit-chatbot pod is running and the service is accessible.
+- Confirm that the rag-nomad-streamlit-chatbot pod is running and the service is accessible.
 
 5. Accessing the Application:
-Find the exposed IP address and port to access the application. If using a NodePort, run:
 
-bash
-Copy code
-minikube service rag-nomad-app-service --url
-or, if using an external Kubernetes provider, use the assigned external IP.
-
-Open the app in your browser at <NodeIP>:<NodePort>.
+```bash 
+Open the app in your browser at http://localhost:30001/  ```
 
 6. Testing the Application:
-Interact with the RAG Chatbot:
-
-Enter queries based on FAQs related to Nomad Foods and test the retrieval and generation capabilities.
+ - Interact with the RAG Chatbot with Entering queries based on FAQs related to Nomad Foods and test the enhanced response given by the app
 
 Evaluation Script:
 
