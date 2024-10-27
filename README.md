@@ -53,25 +53,29 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
    - Run the following command to create a Kubernetes secret with your API key:
    
    ```bash
-   kubectl create secret generic mistral-api-key --from-literal=MISTRAL_API_KEY=<your-api-key> ```
+   kubectl create secret generic mistral-api-key --from-literal=MISTRAL_API_KEY=<your-api-key>
+    ```
 
 3. **Set Up Docker Image**:
  - Pull the Docker image from Docker Hub:
 
 ```bash
-   docker pull ziedtrikimlops/rag-chatbot-nomad-food:v1 ```
+   docker pull ziedtrikimlops/rag-chatbot-nomad-food:v1
+```
 
-4. Deploy the Application on Kubernetes:
+4. **Deploy the Application on Kubernetes:**
 - Ensure Kubernetes is set up and running on your local machine or a cloud provider.
 - Apply the deployment and service YAML files to start the application on Kubernetes:
 
 ** Navigate to the Cloned Repository Directory:
 ```bash
-   cd Nomad_Foods_RAG_LLM ```
+   cd Nomad_Foods_RAG_LLM
+```
 
 **Apply the Kubernetes Deployment kubectl yaml file :
 ```bash
-   kubectl apply -f rag_nomad_app_deployment.yaml ```
+   kubectl apply -f rag_nomad_app_deployment.yaml
+ ```
 
 **Apply the Kubernetes Service kubectl yaml file :
 ```bash
@@ -82,14 +86,16 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 
 ```bash
    kubectl get pods
-   kubectl get services ```
+   kubectl get services
+ ```
 
 - Confirm that the rag-nomad-streamlit-chatbot pod is running and the service is accessible.
 
 5. Accessing the Application:
 
 ```bash 
-Open the app in your browser at http://localhost:30001/  ```
+Open the app in your browser at http://localhost:30001/
+```
 
 6. Testing the Application:
  - Interact with the RAG Chatbot with Entering queries based on FAQs related to Nomad Foods and test the enhanced response given by the app
