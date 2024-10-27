@@ -1,0 +1,20 @@
+{
+    "faq_data": [
+      {
+        "category": "Nutrition",
+        "question": "What nutritional information do you provide on your products?",
+        "answer": "We provide detailed nutritional information on all our products. Each item features a nutrition label that includes calories, macronutrients (fats, proteins, carbohydrates), vitamins, and minerals. This information helps customers make informed choices based on their dietary needs."
+      },
+      {
+        "category": "Returns",
+        "question": "What is your return policy for unsatisfied customers?",
+        "answer": "We aim to ensure customer satisfaction. If you are not satisfied with a product, you may return it within 30 days of purchase for a full refund or exchange. The product must be in its original packaging and unused. For more details, please contact our customer service team."
+      },
+      {
+        "category": "Customer Support",
+        "question": "How can I contact customer support?",
+        "answer": "Our customer support team is available 24/7 to assist you. You can reach us via phone, email, or live chat on our website. We strive to respond to all inquiries promptly to ensure your questions are answered."
+      }
+    ]
+  }
+  
