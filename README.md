@@ -53,6 +53,8 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
    - Sign up for an account with MistralAI and obtain your API key.
 
 2. **Create Kubernetes Secrets:**
+3. 
    Run the following command to create a Kubernetes secret with your API key:
+   
    ```bash
    kubectl create secret generic mistral-api-key --from-literal=MISTRAL_API_KEY=<your-api-key>
