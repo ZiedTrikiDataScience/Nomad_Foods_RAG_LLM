@@ -121,3 +121,7 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 
 - This notebook allows you to assess the generator quality through ***Cosine Similarity*** and ***LLM-As-A-Judge*** offline evaluation techniques.
 
+- ***The Cosine Similarity*** is computed between the ***LLM_Answer*** and the ***Ground_Truth_Answer***.
+
+- The ***LLM-As-A-judge*** is applied through calling ***ministral-3b-latest*** which is a different mistral model than the one used in the original app : ***mistral-large-latest*** so that we ensure an unbiased generation evaluation
+
