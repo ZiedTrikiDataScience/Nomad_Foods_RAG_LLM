@@ -167,6 +167,7 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
   
 - Select "Upload JSON file" and browse to locate your RAG-Nomad_Foods_Dashboard-1730153014881.json file in the monitoring folder.
 
+<img width="1279" alt="Dashboard Nomad Foods" src="https://github.com/user-attachments/assets/303533c4-357e-4d6f-a6ea-607f2d4a58d2">
 
 
 ### 10. Best Practises and Improvement Techniques Evaluation :
