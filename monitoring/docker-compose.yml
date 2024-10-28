@@ -1,41 +1,56 @@
-version: '3.9'
-
-name: nomad_foods_rag_streamlit_app
-
+version: '3.8'
 
 services:
-  chatbot_app:
-    image: ziedtrikimlops/rag-chatbot-nomad-food:v1
-    environment:
-      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
-      - POSTGRES_HOST=postgres
-      - POSTGRES_DB=feedback_db
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin_password
-    depends_on:
-      - postgres
-    ports:
-      - "8501:8501"
-
   postgres:
-    image: postgres:13
+    image: postgres:latest
     environment:
-      - POSTGRES_DB=feedback_db
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin_password
-    ports:
-      - "5432:5432"
+      POSTGRES_PASSWORD: "example"
+      POSTGRES_DB: monitoring_db
+      POSTGRES_USER: "postgres"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  init_db:
+    image: python:3.9
+    volumes:
+      - ./init_db.py:/init_db.py  # Mounting the init_db.py script from the monitoring folder
+    environment:
+      POSTGRES_DB: monitoring_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "pip install psycopg2 && python -u /init_db.py"  # Install psycopg2 and then run the script
+    restart: "no"  # Prevent this service from restarting after execution
 
   grafana:
     image: grafana/grafana
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_DATABASE_TYPE: postgres
+      GF_DATABASE_HOST: postgres:5432  # Use the service name 'postgres' as the host
+      GF_DATABASE_NAME: monitoring_db
+      GF_DATABASE_USER: postgres
+      GF_DATABASE_PASSWORD: example
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    volumes:
+      - grafana_data:/var/lib/grafana
 
 volumes:
   postgres_data:
+  grafana_data:
