@@ -130,12 +130,42 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 - The ***LLM-As-A-judge*** is applied through calling ***ministral-3b-latest*** which is a different mistral model than the one used in the original app : ***mistral-large-latest*** so that we ensure an unbiased generation evaluation.
 
 ### 9 : Monitoring :
-- To monitor the rag system , follow these steps :
 
-  * ```bash
+- Note that for the mmonitoring purposes , I created inside the monitoring folder a version of my app only for monitoring purposes called ***monitoring_streamlit_chatbot_rag_nomad_foods.py*** that combines ***rag_nomad_foods_chatbot.py*** and ***streamlit_chatbot_rag_nomad_foods.py***( which are used for the kubernetes deployment with the docker image).
+
+- To monitor the rag system , ensure that your docker engine is running and follow these steps :
+
+ 
+
+
+```bash
    cd monitoring
-    ```
+```
 
+```bash
+   streamlit run monitoring_streamlit_chatbot_rag_nomad_foods.py
+```
+
+```bash
+   Navigate to http://localhost:8501/
+```
+
+#### 9.2 : Build and start Docker Compose Containers:
+
+```bash
+   docker-compose up --build 
+```
+
+#### 9.3 : Access Grafana and Import the dashbaord :
+
+```bash
+   Navigate to http://localhost:3000 
+```
+- Use the default login credentials (username: admin, password: admin)
+
+- Go to "Dashboards" > "Manage" > "Import"
+  
+- Select "Upload JSON file" and browse to locate your RAG-Nomad_Foods_Dashboard-1730153014881.json file in the monitoring folder.
 
 
 ### 10. Best Practises and Improvement Techniques Evaluation :
