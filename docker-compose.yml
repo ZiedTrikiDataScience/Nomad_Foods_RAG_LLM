@@ -1,40 +1,41 @@
 version: '3.9'
 
-name: fintech_rag_streamlit_app
+name: nomad_foods_rag_streamlit_app
+
 
 services:
-
-  # Elasticsearch service
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.13
+  chatbot_app:
+    image: ziedtrikimlops/rag-chatbot-nomad-food:v1
     environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false  # Disable security to avoid username/password
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - esdata:/usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
-
-
-
-  # Streamlit app service
-  streamlit:
-    build:
-      context: .
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=feedback_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin_password
+    depends_on:
+      - postgres
     ports:
       - "8501:8501"
+
+  postgres:
+    image: postgres:13
     environment:
-      - MISTRAL_API_KEY=${MISTRAL_API_KEY}  # Set your Mistral API key here
-      - ELASTICSEARCH_HOST=http://elasticsearch:9200
+      - POSTGRES_DB=feedback_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
-      - elasticsearch  # Ensure Elasticsearch starts before the Streamlit app
+      - postgres
 
 volumes:
-  esdata:
-    driver: local
+  postgres_data:
