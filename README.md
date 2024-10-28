@@ -130,7 +130,11 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 - The ***LLM-As-A-judge*** is applied through calling ***ministral-3b-latest*** which is a different mistral model than the one used in the original app : ***mistral-large-latest*** so that we ensure an unbiased generation evaluation.
 
 ### 9 : Monitoring :
+- To monitor the rag system , follow these steps :
 
+  * ```bash
+cd monitoring
+```
 
 
 
