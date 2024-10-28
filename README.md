@@ -133,8 +133,8 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 - To monitor the rag system , follow these steps :
 
   * ```bash
-cd monitoring
-```
+   cd monitoring
+    ```
 
 
 
