@@ -129,3 +129,22 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 
 - The ***LLM-As-A-judge*** is applied through calling ***ministral-3b-latest*** which is a different mistral model than the one used in the original app : ***mistral-large-latest*** so that we ensure an unbiased generation evaluation.
 
+### 9 : Monitoring :
+
+
+
+
+### 10. Best Practises and Improvement Techniques Evaluation :
+
+- Run the ***rag_nomad_foods_hybrid_re_rank_re_write.py*** to test the rag system and its comparision when working with 2 methods:
+  
+#### First Method: The straightforward FAISS vector search.
+
+#### Second Method: The addition of :
+**Hybrid Vector and Text Search**
+**Document re-ranking**
+**User query rewriting**
+
+
+>> The Second Method with the optimization practises of **Hybrid Vector and Text Search** , **Document re-ranking** , **User query rewriting** gave better results.
+>> Nevertheless, for this project , we will deploy the rag system working with the first method of the straightforward FAISS Vector Search as v1 with potentially working to integrate the second for the next v2.
