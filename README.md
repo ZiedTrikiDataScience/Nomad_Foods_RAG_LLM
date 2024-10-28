@@ -146,5 +146,5 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
    **User query rewriting**
 
 
->> The Second Method with the optimization practises of **Hybrid Vector and Text Search** , **Document re-ranking** , **User query rewriting** gave better results.
->> Nevertheless, for this project , we will deploy the rag system working with the first method of the straightforward FAISS Vector Search as v1 with potentially working to integrate the second for the next v2.
+> The Second Method with the optimization practises of **Hybrid Vector and Text Search** , **Document re-ranking** , **User query rewriting** gave better results.
+> Nevertheless, for this project , we will deploy the rag system working with the first method of the straightforward FAISS Vector Search as v1 with potentially working to integrate the second for the next v2.
