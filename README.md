@@ -168,7 +168,7 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 - Select "Upload JSON file" and browse to locate your RAG-Nomad_Foods_Dashboard-1730153014881.json file in the monitoring folder.
 
 
-sw
+
 ### 10. Best Practises and Improvement Techniques Evaluation :
 
 - Run the ***rag_nomad_foods_hybrid_re_rank_re_write.py*** to test the rag system and its comparision when working with 2 methods:
