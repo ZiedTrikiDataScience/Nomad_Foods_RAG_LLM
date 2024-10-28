@@ -138,7 +138,7 @@ git clone https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM.git
 
 - Run the ***rag_nomad_foods_hybrid_re_rank_re_write.py*** to test the rag system and its comparision when working with 2 methods:
   
-   * First Method: The straightforward FAISS vector search.
+   * First Method: The straightforward ***FAISS vector search***.
 
    * Second Method: The addition of :
    **Hybrid Vector and Text Search**
