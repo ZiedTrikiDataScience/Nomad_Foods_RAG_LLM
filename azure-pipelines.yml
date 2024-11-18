@@ -1,0 +1,62 @@
+trigger:
+  branches:
+    include:
+      - main  # Trigger on pushes to main branch
+
+variables:
+  azureSubscription: 'YOUR_AZURE_DEVOPS_SERVICE_CONNECTION_NAME'  # Set this up in the portal
+  acrName: 'ragnomadacr'  # Your ACR name
+  containerRegistry: 'ragnomadacr.azurecr.io'  # Your ACR server
+  imageName: 'ziedtrikimlops/rag-chatbot-nomad-food'
+  containerGroupName: 'rag-chatbot-nomad'  # Your ACI container group name
+  containerInstanceName: 'rag-chatbot-nomad-container'  # Name for your container instance
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildAndPush
+        pool:
+          vmImage: 'ubuntu-latest'
+
+        steps:
+          - task: Docker@2
+            inputs:
+              command: buildAndPush
+              repository: $(containerRegistry)/$(imageName)
+              dockerfile: Dockerfile
+              tags: |
+                $(Build.BuildId)
+
+          - script: echo "Docker image pushed to ACR."
+
+  - stage: Deploy
+    dependsOn: Build
+    condition: succeeded()
+
+    jobs:
+      - deployment: DeployToACI
+        pool:
+          vmImage: 'ubuntu-latest'
+
+        environment: 'Production'
+
+        steps:
+          - checkout: self
+
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: $(azureSubscription)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az container create --resource-group YOUR_RESOURCE_GROUP \
+                --name $(containerGroupName) \
+                --image $(containerRegistry)/$(imageName):$(Build.BuildId) \
+                --dns-name-label $(containerGroupName) \
+                --ports 8501 \
+                --registry-login-server $(containerRegistry) \
+                --registry-username $(ACR_USERNAME) \
+                --registry-password $(ACR_PASSWORD)
+            env:
+              ACR_USERNAME: $(ACR_USERNAME)  # Define in DevOps pipeline secrets
+              ACR_PASSWORD: $(ACR_PASSWORD)  # Define in DevOps pipeline secrets
