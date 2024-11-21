@@ -69,7 +69,7 @@ stages:
                   --environment-variables MISTRAL_API_KEY=$env:MISTRAL_API_KEY `
                   --registry-login-server $(containerRegistry) `
                   --registry-username $(acrName) `
-                  --registry-password $(ACR_PASSWORD) `
+                  --registry-password $env:ACR_PASSWORD `
                   --restart-policy OnFailure
 
                 $containerDetails = az container show `
