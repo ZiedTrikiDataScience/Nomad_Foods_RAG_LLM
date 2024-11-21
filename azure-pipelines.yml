@@ -39,7 +39,7 @@ stages:
               dockerfile: Dockerfile
               tags: |
                 $(Build.BuildId)
-              arguments: '--no-cache'  # This ensures no cache is used during the build 
+              arguments: --no-cache  # This ensures no cache is used during the build 
                
 
           - script: echo "Docker image successfully built and pushed to ACR."
