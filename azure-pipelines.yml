@@ -18,6 +18,9 @@ stages:
         pool:
           name: local
 
+        variables:
+          RunAsAdmin: 'true'      
+
         steps:
           # Step 1: Login to ACR
           - task: Docker@2
