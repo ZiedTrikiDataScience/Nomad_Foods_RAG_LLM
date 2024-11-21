@@ -47,7 +47,10 @@ stages:
     jobs:
       - job: DeployToACI
         pool:
-          vmImage: 'ubuntu-latest'
+          name: local
+
+        variables:
+          RunAsAdmin: 'true' 
 
         steps:
           # Step 1: Login to Azure (using service connection to Azure)
