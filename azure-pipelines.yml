@@ -5,7 +5,7 @@ trigger:
 
 variables:
   azureSubscription: 'azure-devops-ci-cd-nomad-rag'  # Set this up in the portal
-  acrName: 'ragnomadacr'  # Your ACR name
+  acrName: 'acr-sp'  # Your ACR SP name
   containerRegistry: 'ragnomadacr.azurecr.io'  # Your ACR server
   imageName: 'ziedtrikimlops/rag-chatbot-nomad-food'
   containerGroupName: 'rag-chatbot-nomad'  # Your ACI container group name
@@ -19,6 +19,14 @@ stages:
           name: local
 
         steps:
+          # Step 1: Login to ACR
+          - task: Docker@2
+            displayName: Login to ACR
+            inputs:
+              command: login
+              containerRegistry: $(acrName)
+
+          # Step 2: Build and Push the image :
           - task: Docker@2
             displayName: Building the new Docker image and Pushing it to ACR
             inputs:
