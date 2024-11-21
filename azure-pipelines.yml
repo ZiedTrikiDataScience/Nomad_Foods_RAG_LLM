@@ -10,6 +10,7 @@ variables:
   imageName: 'ziedtrikimlops/rag-chatbot-nomad-food'
   containerGroupName: 'rag-chatbot-nomad'   # Your ACI container group name
   containerInstanceName: 'rag-chatbot-nomad'  # Name for your container instance
+  resourceGroup: 'RAGNomadResourceGroup'
 
 stages:
   - stage: Build
