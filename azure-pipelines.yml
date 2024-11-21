@@ -1,0 +1,31 @@
+trigger:
+  branches:
+    include:
+      - main  # Trigger on pushes to main branch
+
+variables:
+  azureSubscription: 'azure-devops-ci-cd-nomad-rag'  # Set this up in the portal
+  acrName: 'ragnomadacr'  # Your ACR name
+  containerRegistry: 'ragnomadacr.azurecr.io'  # Your ACR server
+  imageName: 'ziedtrikimlops/rag-chatbot-nomad-food'
+  containerGroupName: 'rag-chatbot-nomad'  # Your ACI container group name
+  containerInstanceName: 'rag-chatbot-nomad'  # Name for your container instance
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildAndPush
+        pool:
+          name: local
+
+        steps:
+          - task: Docker@2
+            displayName: Building the new Docker image and Pushing it to ACR
+            inputs:
+              command: buildAndPush
+              repository: $(containerRegistry)/$(imageName)
+              dockerfile: Dockerfile
+              tags: |
+                $(Build.BuildId)
+
+          - script: echo "Docker image successefully built and pushed to ACR."
