@@ -162,7 +162,7 @@ def app():
         st.markdown("""
             <div style='text-align: center; color: #666666;'>
                 Project Done by : ZIED TRIKI , 
-                                    GenAI MLOps Engineer | 
+                                    GenAI LLM MLOps Engineer | 
             </div>
         """, unsafe_allow_html=True)
 
