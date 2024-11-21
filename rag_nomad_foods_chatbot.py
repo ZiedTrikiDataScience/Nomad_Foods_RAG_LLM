@@ -5,6 +5,7 @@ from sentence_transformers import SentenceTransformer
 import mistralai
 from mistralai import Mistral
 import os
+import streamlit as st
 
 # 1. Read Data from JSON File
 with open('faq_data.json', 'r') as file:
@@ -36,6 +37,7 @@ embedding_matrix = np.array(embeddings)
 faiss_index.add(embedding_matrix)
 
 # 5. Function to search for the most similar question using FAISS
+@st.cache_data(show_spinner=False)
 def search_similar_question(prompt):
     query_vector = model.encode(prompt)  # Convert user prompt to vector
     query_vector = np.array([query_vector]).astype('float32')
@@ -50,6 +52,7 @@ def search_similar_question(prompt):
 # 6. Enhance response generation with MISTRAL AI
 api_key = os.getenv('MISTRAL_API_KEY')
 
+@st.cache_data(show_spinner=False)
 def generate_enhanced_answer(prompt, context, api_key):
     client = Mistral(api_key=api_key)
     
