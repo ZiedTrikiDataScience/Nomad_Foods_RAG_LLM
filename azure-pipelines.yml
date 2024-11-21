@@ -40,3 +40,66 @@ stages:
                 $(Build.BuildId)
 
           - script: echo "Docker image successefully built and pushed to ACR."
+
+
+
+  - stage: Deploy
+    jobs:
+      - job: DeployToACI
+        pool:
+          vmImage: 'ubuntu-latest'
+
+        steps:
+          # Step 1: Login to Azure (using service connection to Azure)
+          - task: AzureCLI@2
+            displayName: 'Azure CLI Login'
+            inputs:
+              azureSubscription: $(azureSubscription)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az login --identity
+
+          # Step 2: Deploy Docker container to ACI
+          - task: AzureCLI@2
+            displayName: 'Deploy Docker container to ACI'
+            inputs:
+              azureSubscription: $(azureSubscription)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az container create \
+                  --resource-group $(resourceGroup) \
+                  --name $(containerGroupName) \
+                  --image $(containerRegistry)/$(imageName):$(Build.BuildId) \
+                  --cpu 2 \
+                  --memory 4.0 \
+                  --ports 8501 \
+                  --environment-variables MISTRAL_API_KEY=$(MISTRAL_API_KEY) \
+                  --registry-login-server $(containerRegistry) \
+                  --registry-username $(acrName) \
+                  --authentication-method aad \
+                  --restart-policy OnFailure  # Or Always based on your need
+
+                echo "Successefully Deployed Docker image to ACI "
+           # Step 3: Retrieve public IP of the container instance and display the link
+           
+          - task: AzureCLI@2
+            displayName: 'Get ACI public IP and display app link'
+            inputs:
+              azureSubscription: $(azureSubscription)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                # Get the public IP address of the ACI container instance
+                PUBLIC_IP=$(az container show \
+                  --resource-group $(resourceGroup) \
+                  --name $(containerGroupName) \
+                  --query "ipAddress.ip" \
+                  --output tsv)
+                
+                # Construct the URL for accessing the app
+                APP_URL="http://$PUBLIC_IP:8501"
+                
+                # Output the URL
+                echo "Successfully Deployed Docker image to ACI. Check it out at $APP_URL"
