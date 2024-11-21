@@ -61,7 +61,6 @@ stages:
               inlineScript: |
                 az container create `
                   --resource-group ${env:resourceGroup} `
-                  --name ${env:containerGroupName} `
                   --image ${env:containerRegistry}/${env:imageName}:${env:Build_BuildId} `
                   --cpu 2 `
                   --memory 4.0 `
@@ -73,7 +72,6 @@ stages:
                   --restart-policy OnFailure
                 $containerDetails = az container show `
                   --resource-group ${env:resourceGroup} `
-                  --name ${env:containerGroupName} `
                   --query "ipAddress.ip" `
                   --output tsv
                 Write-Host "Successfully Deployed. Access it at http://$containerDetails:8501"
