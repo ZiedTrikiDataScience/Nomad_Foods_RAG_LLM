@@ -2,7 +2,6 @@ trigger:
   branches:
     include:
       - main  # Trigger on pushes to main branch
-
 variables:
   azureSubscription: 'azure-devops-ci-cd-nomad-rag'
   acrName: 'acr-sp'
@@ -11,30 +10,25 @@ variables:
   containerGroupName: 'rag-chatbot-nomad'
   containerInstanceName: 'rag-chatbot-nomad'
   resourceGroup: 'RAGNomadResourceGroup'
-
 stages:
   - stage: Build
     jobs:
       - job: BuildAndPush
         pool:
           name: local
-
         variables:
           RunAsAdmin: 'true'
-
         steps:
           # Step 1: Clear Docker Cache
           - script: |
               docker system prune -af
             displayName: 'Clear Docker Cache'
-
           # Step 2: Login to ACR
           - task: Docker@2
             displayName: Login to ACR
             inputs:
               command: login
               containerRegistry: $(acrName)
-
           # Step 3: Build and Push the image
           - task: Docker@2
             displayName: Building the new Docker image and Pushing it to ACR
@@ -48,18 +42,14 @@ stages:
               arguments: |
                 --no-cache 
                 --pull
-
           - script: echo "Docker image successfully built and pushed to ACR."
-
   - stage: Deploy
     jobs:
       - job: DeployToACI
         pool:
           name: local
-
         variables:
           RunAsAdmin: 'true'
-
         steps:
           - task: AzureCLI@2
             displayName: Azure CLI Login and Deployment
@@ -68,39 +58,31 @@ stages:
               scriptType: ps
               scriptLocation: inlineScript
               inlineScript: |
-                # Delete existing container instance
-                Write-Host "Deleting existing container instance..."
-                az container delete `
+              
+                # Stop the container instance
+                Write-Host "Stopping container instance..."
+                az container stop `
+                  --resource-group $(resourceGroup) `
+                  --name $(containerInstanceName)
+                
+                # Update the container image
+                Write-Host "Updating container instance image..."
+                az container update `
                   --resource-group $(resourceGroup) `
                   --name $(containerInstanceName) `
-                  --yes
-
-                # Wait for a moment to ensure deletion is complete
-                Start-Sleep -Seconds 30
-
-                # Create new container instance
-                Write-Host "Creating new container instance..."
-                az container create `
+                  --image $(containerRegistry)/$(imageName):$(Build.BuildId)
+                
+                # Start the container instance
+                Write-Host "Starting container instance..."
+                az container start `
                   --resource-group $(resourceGroup) `
-                  --name $(containerInstanceName) `
-                  --image $(containerRegistry)/$(imageName):$(Build.BuildId) `
-                  --cpu 2 `
-                  --memory 4.0 `
-                  --ports 8501 `
-                  --environment-variables `
-                    MISTRAL_API_KEY=$env:MISTRAL_API_KEY `
-                    BUILD_VERSION=$(Build.BuildId) `
-                  --registry-login-server $(containerRegistry) `
-                  --registry-username $(acrName) `
-                  --registry-password $env:ACR_PASSWORD `
-                  --restart-policy OnFailure
-
+                  --name $(containerInstanceName)
+                
                 # Get and display container IP
                 $containerDetails = az container show `
                   --resource-group $(resourceGroup) `
                   --name $(containerInstanceName) `
                   --query "ipAddress.ip" `
                   --output tsv
-
                 Write-Host "Successfully Deployed. Access it at http://$containerDetails:8501"
                 Write-Host "Build Version: $(Build.BuildId)"
