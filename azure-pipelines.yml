@@ -8,7 +8,7 @@ variables:
   acrName: 'acr-sp'  # Your ACR SP name
   containerRegistry: 'ragnomadacr.azurecr.io'  # Your ACR server
   imageName: 'ziedtrikimlops/rag-chatbot-nomad-food'
-  containerGroupName: 'rag-chatbot-nomad'  # Your ACI container group name
+  containerGroupName: 'rag-chatbot-nomad'   # Your ACI container group name
   containerInstanceName: 'rag-chatbot-nomad'  # Name for your container instance
 
 stages:
