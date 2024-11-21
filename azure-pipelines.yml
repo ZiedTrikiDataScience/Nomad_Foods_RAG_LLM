@@ -4,7 +4,7 @@ trigger:
       - main  # Trigger on pushes to main branch
 
 variables:
-  azureSubscription: 'azure-devops-ci-cd-nomad-rag'  # Set this up in the portal
+  azureSubscription: 'azure-devops-ci-cd-nomad-rag'   # Set this up in the portal
   acrName: 'acr-sp'  # Your ACR SP name
   containerRegistry: 'ragnomadacr.azurecr.io'  # Your ACR server
   imageName: 'ziedtrikimlops/rag-chatbot-nomad-food'
