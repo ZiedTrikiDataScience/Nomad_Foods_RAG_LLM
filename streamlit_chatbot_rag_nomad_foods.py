@@ -9,10 +9,10 @@ def chatbot(prompt):
     api_key = os.environ.get("MISTRAL_API_KEY")
     with st.spinner("🔍 Searching for relevant information..."):
         faq = search_similar_question(prompt)
-        time.sleep(0.5)  # Add a small delay for UX
+        time.sleep(0.4)  # Add a small delay for UX
     with st.spinner("🤔 Generating enhanced response..."):
         enhanced_answer = generate_enhanced_answer(prompt, faq['answer'], api_key=api_key)
-        time.sleep(0.5)  # Add a small delay for the UX
+        time.sleep(0.4)  # Add a small delay for the UX
     return enhanced_answer
 
 
