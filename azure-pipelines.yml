@@ -16,10 +16,11 @@ stages:
     jobs:
       - job: BuildAndPush
         pool:
-          vmImage: 'ubuntu-latest'
+          name: local
 
         steps:
           - task: Docker@2
+            displayName: Building the new Docker image and Pushing it to ACR
             inputs:
               command: buildAndPush
               repository: $(containerRegistry)/$(imageName)
