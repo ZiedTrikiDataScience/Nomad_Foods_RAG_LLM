@@ -4,12 +4,12 @@ trigger:
       - main  # Trigger on pushes to main branch
 
 variables:
-  azureSubscription: 'azure-devops-ci-cd-nomad-rag'   # Set this up in the portal
-  acrName: 'acr-sp'  # Your ACR SP name
-  containerRegistry: 'ragnomadacr.azurecr.io'  # Your ACR server
+  azureSubscription: 'azure-devops-ci-cd-nomad-rag'
+  acrName: 'acr-sp'
+  containerRegistry: 'ragnomadacr.azurecr.io'
   imageName: 'ziedtrikimlops/rag-chatbot-nomad-food'
-  containerGroupName: 'rag-chatbot-nomad'   # Your ACI container group name
-  containerInstanceName: 'rag-chatbot-nomad'   # Name for your container instance
+  containerGroupName: 'rag-chatbot-nomad'
+  containerInstanceName: 'rag-chatbot-nomad'
   resourceGroup: 'RAGNomadResourceGroup'
 
 stages:
@@ -23,14 +23,19 @@ stages:
           RunAsAdmin: 'true'
 
         steps:
-          # Step 1: Login to ACR
+          # Step 1: Clear Docker Cache
+          - script: |
+              docker system prune -af
+            displayName: 'Clear Docker Cache'
+
+          # Step 2: Login to ACR
           - task: Docker@2
             displayName: Login to ACR
             inputs:
               command: login
               containerRegistry: $(acrName)
 
-          # Step 2: Build and Push the image
+          # Step 3: Build and Push the image
           - task: Docker@2
             displayName: Building the new Docker image and Pushing it to ACR
             inputs:
@@ -39,8 +44,10 @@ stages:
               dockerfile: Dockerfile
               tags: |
                 $(Build.BuildId)
-              arguments: --no-cache  # This ensures no cache is used during the build 
-               
+                latest
+              arguments: |
+                --no-cache 
+                --pull
 
           - script: echo "Docker image successfully built and pushed to ACR."
 
@@ -58,9 +65,21 @@ stages:
             displayName: Azure CLI Login and Deployment
             inputs:
               azureSubscription: $(azureSubscription)
-              scriptType: ps  # Use PowerShell
+              scriptType: ps
               scriptLocation: inlineScript
               inlineScript: |
+                # Delete existing container instance
+                Write-Host "Deleting existing container instance..."
+                az container delete `
+                  --resource-group $(resourceGroup) `
+                  --name $(containerInstanceName) `
+                  --yes
+
+                # Wait for a moment to ensure deletion is complete
+                Start-Sleep -Seconds 30
+
+                # Create new container instance
+                Write-Host "Creating new container instance..."
                 az container create `
                   --resource-group $(resourceGroup) `
                   --name $(containerInstanceName) `
@@ -68,12 +87,15 @@ stages:
                   --cpu 2 `
                   --memory 4.0 `
                   --ports 8501 `
-                  --environment-variables MISTRAL_API_KEY=$env:MISTRAL_API_KEY `
+                  --environment-variables `
+                    MISTRAL_API_KEY=$env:MISTRAL_API_KEY `
+                    BUILD_VERSION=$(Build.BuildId) `
                   --registry-login-server $(containerRegistry) `
                   --registry-username $(acrName) `
                   --registry-password $env:ACR_PASSWORD `
                   --restart-policy OnFailure
 
+                # Get and display container IP
                 $containerDetails = az container show `
                   --resource-group $(resourceGroup) `
                   --name $(containerInstanceName) `
@@ -81,3 +103,4 @@ stages:
                   --output tsv
 
                 Write-Host "Successfully Deployed. Access it at http://$containerDetails:8501"
+                Write-Host "Build Version: $(Build.BuildId)"
