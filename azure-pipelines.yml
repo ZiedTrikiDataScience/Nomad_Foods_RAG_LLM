@@ -60,20 +60,20 @@ stages:
               scriptLocation: inlineScript
               inlineScript: |
                 az container create `
-                  --resource-group $(resourceGroup) `
-                  --name $(containerGroupName) `
-                  --image $(containerRegistry)/$(imageName):$(Build.BuildId) `
+                  --resource-group ${env:resourceGroup} `
+                  --name ${env:containerGroupName} `
+                  --image ${env:containerRegistry}/${env:imageName}:${env:Build_BuildId} `
                   --cpu 2 `
                   --memory 4.0 `
                   --ports 8501 `
-                  --environment-variables MISTRAL_API_KEY=$(MISTRAL_API_KEY) `
-                  --registry-login-server $(containerRegistry) `
-                  --registry-username $(acrName) `
+                  --environment-variables MISTRAL_API_KEY=${env:MISTRAL_API_KEY} `
+                  --registry-login-server ${env:containerRegistry} `
+                  --registry-username ${env:acrName} `
                   --authentication-method aad `
                   --restart-policy OnFailure
                 $containerDetails = az container show `
-                  --resource-group $(resourceGroup) `
-                  --name $(containerGroupName) `
+                  --resource-group ${env:resourceGroup} `
+                  --name ${env:containerGroupName} `
                   --query "ipAddress.ip" `
                   --output tsv
                 Write-Host "Successfully Deployed. Access it at http://$containerDetails:8501"
