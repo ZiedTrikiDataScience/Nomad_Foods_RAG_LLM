@@ -20,12 +20,12 @@ stages:
           name: local
 
         variables:
-          RunAsAdmin: 'true'      
+          RunAsAdmin: 'true'
 
         steps:
           # Step 1: Login to ACR
           - task: Docker@2
-            displayName: Login to  ACR
+            displayName: Login to ACR
             inputs:
               command: login
               containerRegistry: $(acrName)
@@ -49,7 +49,7 @@ stages:
           name: local
 
         variables:
-          RunAsAdmin: 'true' 
+          RunAsAdmin: 'true'
 
         steps:
           - task: AzureCLI@2
@@ -60,18 +60,21 @@ stages:
               scriptLocation: inlineScript
               inlineScript: |
                 az container create `
-                  --resource-group ${env:resourceGroup} `
-                  --image ${env:containerRegistry}/${env:imageName}:${env:Build_BuildId} `
+                  --resource-group $(resourceGroup) `
+                  --name $(containerInstanceName) `
+                  --image $(containerRegistry)/$(imageName):$(Build.BuildId) `
                   --cpu 2 `
                   --memory 4.0 `
                   --ports 8501 `
-                  --environment-variables MISTRAL_API_KEY=${env:MISTRAL_API_KEY} `
-                  --registry-login-server ${env:containerRegistry} `
-                  --registry-username ${env:acrName} `
-                  --authentication-method aad `
+                  --environment-variables MISTRAL_API_KEY=$(MISTRAL_API_KEY) `
+                  --registry-login-server $(containerRegistry) `
+                  --registry-username $(acrName) `
                   --restart-policy OnFailure
+
                 $containerDetails = az container show `
-                  --resource-group ${env:resourceGroup} `
+                  --resource-group $(resourceGroup) `
+                  --name $(containerInstanceName) `
                   --query "ipAddress.ip" `
                   --output tsv
+
                 Write-Host "Successfully Deployed. Access it at http://$containerDetails:8501"
