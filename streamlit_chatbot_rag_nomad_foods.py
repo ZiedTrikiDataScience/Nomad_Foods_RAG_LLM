@@ -12,7 +12,7 @@ def chatbot(prompt):
         time.sleep(0.5)  # Add a small delay for UX
     with st.spinner("🤔 Generating enhanced response..."):
         enhanced_answer = generate_enhanced_answer(prompt, faq['answer'], api_key=api_key)
-        time.sleep(0.5)  # Add a small delay for UX
+        time.sleep(0.5)  # Add a small delay for the UX
     return enhanced_answer
 
 
