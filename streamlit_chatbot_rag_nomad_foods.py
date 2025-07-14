@@ -1,27 +1,39 @@
-import streamlit as st
-from rag_nomad_foods_chatbot import search_similar_question, generate_enhanced_answer
+# ─── streamlit_chatbot_rag_nomad_foods.py ────────────────────────────────────
+
 import os
+import streamlit as st
+# ─── 0. Page config MUST be before any other st.* call ───────────────────────
+st.set_page_config(
+    page_title="Nomad Foods AI Assistant",
+    page_icon="🍽️",
+    layout="wide"
+)
+from dotenv import load_dotenv
+from rag_nomad_foods_chatbot import search_similar_question, generate_enhanced_answer
 from PIL import Image
 import time
 
-#  Function to handle the chatbot logic
+
+
+# ─── 1. Load .env ───────────────────────────────────────────────────────────
+load_dotenv()
+
+# ─── 2. Helper functions ────────────────────────────────────────────────────
 def chatbot(prompt):
-    api_key = os.environ.get("MISTRAL_API_KEY")
+    api_key = os.environ["OPENROUTER_API_KEY"]
     with st.spinner("🔍 Searching for relevant information..."):
         faq = search_similar_question(prompt)
-        time.sleep(0.4)  # Add a small delay for UX
+        time.sleep(0.4)
     with st.spinner("🤔 Generating enhanced response..."):
-        enhanced_answer = generate_enhanced_answer(prompt, faq['answer'], api_key=api_key)
-        time.sleep(0.4)  # Add a small delay for the UX
-    return enhanced_answer
-
+        ans = generate_enhanced_answer(prompt, faq["answer"], api_key)
+        time.sleep(0.4)
+    return ans
 
 def load_assets():
     try:
-        logo = Image.open('nomad_foods_logo.jpg')  # Use Nomad Foods logo
-        return logo
+        return Image.open('nomad_foods_logo.jpg')
     except FileNotFoundError:
-        st.warning("Logo file not found. Please ensure 'nomad_foods_logo.jpg' exists in the correct path.")
+        st.warning("Logo file not found. Please ensure 'nomad_foods_logo.jpg' exists.")
         return None
 
 def initialize_session_state():
@@ -30,15 +42,10 @@ def initialize_session_state():
     if "feedback" not in st.session_state:
         st.session_state.feedback = {}
     if "user_query" not in st.session_state:
-        st.session_state.user_query = ""  # Track the user query
+        st.session_state.user_query = ""
+
 
 def app():
-    # Page configuration
-    st.set_page_config(
-        page_title="Nomad Foods AI Assistant",
-        page_icon="🍽️",
-        layout="wide"
-    )
 
     initialize_session_state()
     
@@ -85,7 +92,7 @@ def app():
         st.sidebar.markdown("---")
         st.sidebar.header("ℹ️ About")
         st.sidebar.info("""
-        This AI assistant uses Retrieval-Augmented Generation (RAG) powered by MISTRAL AI
+        This AI assistant uses Retrieval-Augmented Generation (RAG) powered by DeepSeek AI
         to answer your queries related to Nomad Foods, covering various products and services.
         """)
 

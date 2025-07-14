@@ -1,90 +1,94 @@
-import json
-import numpy as np
-import faiss
-from sentence_transformers import SentenceTransformer
-import mistralai
-from mistralai import Mistral
 import os
-import streamlit as st
+import json
+import requests
+from dotenv import load_dotenv
+from sentence_transformers import SentenceTransformer
+from pinecone import Pinecone, ServerlessSpec, CloudProvider, VectorType
 
-# 1. Read Data from JSON File
-with open('faq_data.json', 'r') as file:
-    qa_data = json.load(file)
+load_dotenv()
 
-# 2. Load the embedding model
-model = SentenceTransformer("all-mpnet-base-v2")
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+PINECONE_REGION = os.getenv("PINECONE_ENV")
+PINECONE_INDEX = os.getenv("PINECONE_INDEX")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-# 3. Create FAISS index
-embedding_dim = 768  # Dimensionality of embeddings from the model
-faiss_index = faiss.IndexFlatL2(embedding_dim)  # L2 distance for similarity search
+# Don't decorate this with @st.cache_* here
+def init_pinecone():
+    pc = Pinecone(api_key=PINECONE_API_KEY)
+    existing = [idx["name"] for idx in pc.list_indexes()]
+    if PINECONE_INDEX not in existing:
+        pc.create_index(
+            name=PINECONE_INDEX,
+            dimension=768,
+            metric="cosine",
+            spec=ServerlessSpec(cloud=CloudProvider.AWS, region=PINECONE_REGION),
+            vector_type=VectorType.DENSE
+        )
+    return pc.Index(name=PINECONE_INDEX)
 
+def load_model():
+    return SentenceTransformer("all-mpnet-base-v2")
 
-# Store questions and embeddings
-questions = []
-embeddings = []
+def upsert_faq(index, model):
+    with open("faq_data.json", "r") as f:
+        qa_data = json.load(f)
 
-# 4. Generate embeddings and add them to the FAISS index
-for category in qa_data['faq_data']:  # Iterate over categories
-    for qa in category['questions']:  # Iterate over questions in each category
-        question = qa['question']
-        embedding = model.encode(question)  # Generate vector embedding
-        
-        questions.append({"question": question, "answer": qa['answer']})
-        embeddings.append(embedding)
+    stats = index.describe_index_stats()
+    if stats["total_vector_count"] == 0:
+        batch = []
+        for i, cat in enumerate(qa_data["faq_data"]):
+            for j, qa in enumerate(cat["questions"]):
+                vec = model.encode(qa["question"]).tolist()
+                batch.append({
+                    "id": f"faq_{i}_{j}",
+                    "values": vec,
+                    "metadata": {"question": qa["question"], "answer": qa["answer"]}
+                })
+        index.upsert(vectors=batch)
 
-# Convert embeddings to numpy array and add to FAISS index
-embedding_matrix = np.array(embeddings)
-faiss_index.add(embedding_matrix)
-
-# 5. Function to search for the most similar question using FAISS
-@st.cache_data(show_spinner=False)
+# These are the ones you expose
 def search_similar_question(prompt):
-    query_vector = model.encode(prompt)  # Convert user prompt to vector
-    query_vector = np.array([query_vector]).astype('float32')
+    index = init_pinecone()
+    model = load_model()
+    upsert_faq(index, model)
+    q_vec = model.encode(prompt).tolist()
+    resp = index.query(
+        vector=q_vec,
+        top_k=1,
+        include_metadata=True
+    )
+    match = resp["matches"][0]
+    return {"question": match["metadata"]["question"], "answer": match["metadata"]["answer"]}
 
-    # Search in FAISS
-    _, indices = faiss_index.search(query_vector, 2)  # Search for 2 closest matchs
-    result_index = indices[0][0]  # Get the index of the best match
-    
-    # Return the question and answer corresponding to the matched index
-    return questions[result_index]
-
-# 6. Enhance response generation with MISTRAL AI
-api_key = os.getenv('MISTRAL_API_KEY')
-
-@st.cache_data(show_spinner=False)
 def generate_enhanced_answer(prompt, context, api_key):
-    client = Mistral(api_key=api_key)
-    
-    # Define a more conversational system prompt
-    system_prompt = """You are a friendly and helpful customer service representative at NomadFoods company. 
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "HTTP-Referer": "https://github.com/ZiedTrikiDataScience/Nomad_Foods_RAG_LLM",
+        "X-Title": "NomadFoods FAQ Assistant"
+    }
+    system_prompt = f"""
+    You are a friendly and helpful customer service representative at NomadFoods company.
     Your responses should be warm, natural, and conversational while being informative.
-    Use the following context to answer the question, but respond in a natural way as if you're 
-    having a conversation. Avoid formal phrases like 'Based on the description provided' or 
-    'Here's a summarized list'. Instead, use more conversational language like 'We at NomadFoods offer' or 
-    'At NomadFoods, You can find'.
-
     Context: {context}
     """
-    
-    # Create a more natural user prompt
-    enhanced_user_prompt = f"""Answer this question in a friendly, conversational way: {prompt}
-    Make sure to:
-    1. Start with a small warm greeting or acknowledgment
-    2. Use natural transitions and conversational language
-    3. Organize information in an easy-to-understand way with bullet points for example
-    4. End with an offer to help further if needed
+    enhanced_user_prompt = f"""
+    Answer this question in a friendly, conversational way: {prompt}
+    - Start with a warm greeting
+    - Use easy-to-understand language
+    - Use bullet points
+    - Offer to help more at the end
     """
-    
-    response = client.chat.complete(
-        model="mistral-large-latest",
-        messages=[
-            {"role": "system", "content": system_prompt.format(context=context)},
-            {"role": "user", "content": enhanced_user_prompt}
+    payload = {
+        "model": "deepseek/deepseek-chat-v3-0324:free",
+        "messages": [
+            {"role": "system", "content": system_prompt.strip()},
+            {"role": "user", "content": enhanced_user_prompt.strip()}
         ],
-        max_tokens=500,
-        temperature=0.7  # Slightly increased temperature for more natural responses
-    )
-    
-    return response.choices[0].message.content.strip()
-
+        "max_tokens": 500,
+        "temperature": 0.7
+    }
+    r = requests.post(url, headers=headers, json=payload)
+    if r.status_code != 200:
+        return f"❌ OpenRouter error {r.status_code}: {r.text}"
+    return r.json()["choices"][0]["message"]["content"].strip()
